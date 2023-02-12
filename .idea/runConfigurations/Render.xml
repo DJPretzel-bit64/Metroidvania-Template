@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Render" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.Dylan.render.Render" />
+    <module name="Metroidvania Template" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
