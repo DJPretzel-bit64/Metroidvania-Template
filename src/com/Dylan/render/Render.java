@@ -1,5 +1,8 @@
 package com.Dylan.render;
 
+import com.Dylan.Player;
+import com.Dylan.World;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -10,7 +13,10 @@ public class Render extends Canvas implements Runnable {
     private static final long serialVersionUID = 1L;
 
     private Thread thread;
+    private World world = new World();
+    private Player player = new Player();
     private final JFrame frame;
+    public static int tileSize = 32;
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
     private static boolean running = false;
@@ -91,7 +97,8 @@ public class Render extends Canvas implements Runnable {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        // Render
+        world.render(g);
+        player.render(g);
 
         g.dispose();
         bs.show();
