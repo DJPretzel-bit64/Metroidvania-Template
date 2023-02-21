@@ -8,7 +8,6 @@ import com.Dylan.input.UserInput;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.io.IOException;
 import java.io.Serial;
 
 public class Render extends Canvas implements Runnable {
@@ -84,11 +83,7 @@ public class Render extends Canvas implements Runnable {
         int frames = 0;
 
         this.player.init(this.userInput);
-        try {
-            this.world.init();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.world.init(this.userInput);
 
         while(running) {
             long now = System.nanoTime();

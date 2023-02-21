@@ -1,6 +1,8 @@
 package com.Dylan;
 
 import com.Dylan.calculations.Boolean2D;
+import com.Dylan.calculations.Vector2D;
+import com.Dylan.input.UserInput;
 import com.Dylan.render.Render;
 
 import javax.imageio.ImageIO;
@@ -14,11 +16,13 @@ import java.util.Scanner;
 
 public class World {
     private final boolean[][] lvlBoolean = new boolean[Render.WORLD_SIZE][Render.WORLD_SIZE];
-    private BufferedImage[][] lvl = new BufferedImage[Render.WORLD_SIZE][Render.WORLD_SIZE];
-    private String dir = "";
-    StringBuilder strBuilder = new StringBuilder(dir);
+    private final BufferedImage[][] lvl = new BufferedImage[Render.WORLD_SIZE][Render.WORLD_SIZE];
+    private final Vector2D offset = new Vector2D();
+    private UserInput userInput;
 
-    public void init() throws IOException {
+    public void init(UserInput userInput) {
+        this.userInput = userInput;
+
         try {
             File file = new File("src/com/Dylan/resources/world/lvl1.dat");
             Scanner reader = new Scanner(file);
@@ -35,13 +39,15 @@ public class World {
 
         for(int i = 0; i < Render.WORLD_SIZE; i++) {
             for (int j = 0; j < Render.WORLD_SIZE; j++) {
-                dir = "";
+                String dir = "";
                 if(lvlBoolean[i][j]) {
-                    if(j > 0) if (lvlBoolean[i][j - 1] || j == 0) dir += "N";
-                    if(i < Render.WORLD_SIZE - 1) if (lvlBoolean[i + 1][j] || i == Render.WORLD_SIZE - 2) dir += "E";
-                    if(j < Render.WORLD_SIZE - 1) if (lvlBoolean[i][j + 1] || j == Render.WORLD_SIZE - 2) dir += "S";
-                    if(i > 0) if (lvlBoolean[i - 1][j] || i == 0) dir += "W";
-                    lvl[i][j] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/com/Dylan/resources/world/world" + dir + ".png")));
+                    if(j > 0) if (lvlBoolean[i][j - 1]) dir += "N";
+                    if(i < Render.WORLD_SIZE - 1) if (lvlBoolean[i + 1][j]) dir += "E";
+                    if(j < Render.WORLD_SIZE - 1) if (lvlBoolean[i][j + 1]) dir += "S";
+                    if(i > 0) if (lvlBoolean[i - 1][j]) dir += "W";
+                    try {
+                        lvl[i][j] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/com/Dylan/resources/world/world" + dir + ".png")));
+                    } catch(IOException ignored) {}
                 }
             }
         }
@@ -50,12 +56,31 @@ public class World {
     public void render(Graphics g) {
         for(int i = 0; i < Render.WORLD_SIZE; i++) {
             for(int j = 0; j < Render.WORLD_SIZE; j++) {
-                if(lvlBoolean[i][j]) g.drawImage(lvl[i][j], i * Render.tileSize * Render.scale, j * Render.tileSize * Render.scale, Render.tileSize * Render.scale, Render.tileSize * Render.scale, null);
+                if(lvlBoolean[i][j]) g.drawImage(lvl[i][j], i * Render.tileSize * Render.scale + (int) offset.x, j * Render.tileSize * Render.scale + (int) offset.y, Render.tileSize * Render.scale, Render.tileSize * Render.scale, null);
             }
         }
     }
 
     public void update(Boolean2D movWorld) {
+        this.userInput.keyboard.update();
 
+        if(movWorld.x) {
+            if (this.userInput.keyboard.getLeft()) {
+                this.offset.x += Render.speed * Render.scale;
+            }
+
+            if (this.userInput.keyboard.getRight()) {
+                this.offset.x -= Render.speed * Render.scale;
+            }
+        }
+        if(movWorld.y) {
+            if(this.userInput.keyboard.getUp()) {
+                this.offset.y += Render.speed * Render.scale;
+            }
+
+            if(this.userInput.keyboard.getDown()) {
+                this.offset.y -= Render.speed * Render.scale;
+            }
+        }
     }
 }
