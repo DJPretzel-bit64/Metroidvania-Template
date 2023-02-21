@@ -5,22 +5,17 @@ import java.awt.event.KeyListener;
 
 public class Keyboard implements KeyListener {
 
-    private boolean[] keys = new boolean[66568];
-    private boolean left, right, up, down;
+    private final boolean[] keys = new boolean[66568];
+    private boolean left, right, space;
 
     public void update() {
         this.left = keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A];
         this.right = keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_S];
-        this.up = keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_W];
-        this.down = keys[KeyEvent.VK_SHIFT] || keys[KeyEvent.VK_R];
+        this.space = keys[KeyEvent.VK_SPACE];
     }
 
-    public boolean getDown() {
-        return this.down;
-    }
-
-    public boolean getUp() {
-        return this.up;
+    public boolean getSpace() {
+        return this.space;
     }
 
     public boolean getLeft() {

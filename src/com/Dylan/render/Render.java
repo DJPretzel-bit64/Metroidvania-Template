@@ -1,8 +1,6 @@
 package com.Dylan.render;
 
-import com.Dylan.Player;
-import com.Dylan.World;
-import com.Dylan.calculations.Boolean2D;
+import com.Dylan.Game;
 import com.Dylan.input.UserInput;
 
 import javax.swing.*;
@@ -15,8 +13,7 @@ public class Render extends Canvas implements Runnable {
     private static final long serialVersionUID = 1L;
 
     private Thread thread;
-    private final World world = new World();
-    private final Player player = new Player();
+    private final Game game = new Game();
     private final JFrame frame;
     public static int tileSize = 32;
     public static int scale = 3;
@@ -28,7 +25,6 @@ public class Render extends Canvas implements Runnable {
     private static final int fps = 144;
     public static int speed = 1;
     static String title = "Metroidvania Game";
-    public Boolean2D movWorld;
 
     private final UserInput userInput;
 
@@ -82,8 +78,7 @@ public class Render extends Canvas implements Runnable {
         double delta = 0;
         int frames = 0;
 
-        this.player.init(this.userInput);
-        this.world.init(this.userInput);
+        this.game.init(this.userInput);
 
         while(running) {
             long now = System.nanoTime();
@@ -116,15 +111,13 @@ public class Render extends Canvas implements Runnable {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        world.render(g);
-        player.render(g);
+        this.game.render(g);
 
         g.dispose();
         bs.show();
     }
 
     private void update() {
-        movWorld = player.update();
-        world.update(movWorld);
+        this.game.update();
     }
 }

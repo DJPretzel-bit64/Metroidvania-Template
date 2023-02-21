@@ -13,9 +13,9 @@ public class Vector2D {
         this.y = 0;
     }
 
-//    public Vector2D normalize() {
-//        double length = Math.sqrt(this.x * this.x + this.y * this.y);
-//
-//        return new Vector2D(this.x / length, this.y / length);
-//    }
+    public Vector2D normalize() {
+        double length = Math.sqrt(this.x * this.x + this.y * this.y);
+
+        return new Vector2D(this.x / length, this.y / length);
+    }
 }

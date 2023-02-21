@@ -1,8 +1,6 @@
 package com.Dylan;
 
-import com.Dylan.calculations.Boolean2D;
 import com.Dylan.calculations.Vector2D;
-import com.Dylan.input.UserInput;
 import com.Dylan.render.Render;
 
 import javax.imageio.ImageIO;
@@ -15,14 +13,12 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class World {
-    private final boolean[][] lvlBoolean = new boolean[Render.WORLD_SIZE][Render.WORLD_SIZE];
+    public final boolean[][] lvlBoolean = new boolean[Render.WORLD_SIZE][Render.WORLD_SIZE];
     private final BufferedImage[][] lvl = new BufferedImage[Render.WORLD_SIZE][Render.WORLD_SIZE];
-    private final Vector2D offset = new Vector2D();
-    private UserInput userInput;
+    public Shape[][] hitBox = new Shape[Render.WORLD_SIZE][Render.WORLD_SIZE];
+    private Vector2D offset = new Vector2D();
 
-    public void init(UserInput userInput) {
-        this.userInput = userInput;
-
+    public void init() {
         try {
             File file = new File("src/com/Dylan/resources/world/lvl1.dat");
             Scanner reader = new Scanner(file);
@@ -48,6 +44,7 @@ public class World {
                     try {
                         lvl[i][j] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/com/Dylan/resources/world/world" + dir + ".png")));
                     } catch(IOException ignored) {}
+                    hitBox[i][j] = new Rectangle(i * Render.tileSize * Render.scale, j * Render.tileSize * Render.scale, Render.tileSize * Render.scale, Render.tileSize * Render.scale);
                 }
             }
         }
@@ -61,26 +58,12 @@ public class World {
         }
     }
 
-    public void update(Boolean2D movWorld) {
-        this.userInput.keyboard.update();
-
-        if(movWorld.x) {
-            if (this.userInput.keyboard.getLeft()) {
-                this.offset.x += Render.speed * Render.scale;
-            }
-
-            if (this.userInput.keyboard.getRight()) {
-                this.offset.x -= Render.speed * Render.scale;
+    public void update(Vector2D position) {
+        for(int i = 0; i < Render.WORLD_SIZE; i ++) {
+            for (int j = 0; j < Render.WORLD_SIZE; j++) {
+                hitBox[i][j] = new Rectangle(i * Render.tileSize * Render.scale + (int) position.x, j * Render.tileSize * Render.scale + (int) position.y, Render.tileSize * Render.scale, Render.tileSize * Render.scale);
             }
         }
-        if(movWorld.y) {
-            if(this.userInput.keyboard.getUp()) {
-                this.offset.y += Render.speed * Render.scale;
-            }
-
-            if(this.userInput.keyboard.getDown()) {
-                this.offset.y -= Render.speed * Render.scale;
-            }
-        }
+        this.offset = position;
     }
 }
