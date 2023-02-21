@@ -2,10 +2,13 @@ package com.Dylan.render;
 
 import com.Dylan.Player;
 import com.Dylan.World;
+import com.Dylan.calculations.Boolean2D;
+import com.Dylan.input.UserInput;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.io.Serial;
 
 public class Render extends Canvas implements Runnable {
@@ -13,21 +16,35 @@ public class Render extends Canvas implements Runnable {
     private static final long serialVersionUID = 1L;
 
     private Thread thread;
-    private World world = new World();
-    private Player player = new Player();
+    private final World world = new World();
+    private final Player player = new Player();
     private final JFrame frame;
     public static int tileSize = 32;
+    public static int scale = 3;
+    public static int renderSize = tileSize * scale;
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
+    public static final int WORLD_SIZE = 12;
     private static boolean running = false;
     private static final int fps = 144;
+    public static int speed = 1;
     static String title = "Metroidvania Game";
+    public Boolean2D movWorld;
+
+    private final UserInput userInput;
 
     public Render() {
         this.frame = new JFrame();
 
         Dimension size = new Dimension(WIDTH, HEIGHT);
         this.setPreferredSize(size);
+
+        this.userInput = new UserInput();
+
+        this.addMouseListener(this.userInput.mouse);
+        this.addMouseMotionListener(this.userInput.mouse);
+        this.addMouseWheelListener(this.userInput.mouse);
+        this.addKeyListener(this.userInput.keyboard);
     }
 
     public static void main(String[] args) {
@@ -65,6 +82,13 @@ public class Render extends Canvas implements Runnable {
         final double ns = 1000000000.0 / fps;
         double delta = 0;
         int frames = 0;
+
+        this.player.init(this.userInput);
+        try {
+            this.world.init();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         while(running) {
             long now = System.nanoTime();
@@ -105,6 +129,7 @@ public class Render extends Canvas implements Runnable {
     }
 
     private void update() {
-        // Update
+        movWorld = player.update();
+        world.update(movWorld);
     }
 }
