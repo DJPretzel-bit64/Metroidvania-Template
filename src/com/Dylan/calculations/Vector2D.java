@@ -8,14 +8,18 @@ public class Vector2D {
         this.x = x;
         this.y = y;
     }
-    public Vector2D() {
-        this.x = 0;
-        this.y = 0;
+
+    public static Vector2D normalize(Vector2D v) {
+        double magnitude = Math.sqrt(v.x * v.x + v.y * v.y);
+
+        return new Vector2D(v.x / magnitude, v.y / magnitude);
     }
 
-    public Vector2D normalize() {
-        double length = Math.sqrt(this.x * this.x + this.y * this.y);
+    public static Vector2D diff(Vector2D v1, Vector2D v2) {
+        return new Vector2D( v1.x - v2.x, v1.y - v2.y);
+    }
 
-        return new Vector2D(this.x / length, this.y / length);
+    public static Vector2D add(Vector2D v1, Vector2D v2) {
+        return new Vector2D(v1.x + v2.x, v1.y + v2.y);
     }
 }

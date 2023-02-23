@@ -16,7 +16,7 @@ public class World {
     public final boolean[][] lvlBoolean = new boolean[Render.WORLD_SIZE][Render.WORLD_SIZE];
     private final BufferedImage[][] lvl = new BufferedImage[Render.WORLD_SIZE][Render.WORLD_SIZE];
     public Shape[][] hitBox = new Shape[Render.WORLD_SIZE][Render.WORLD_SIZE];
-    private Vector2D offset = new Vector2D();
+    private Vector2D offset = new Vector2D(0, 0);
 
     public void init() {
         try {
@@ -61,7 +61,7 @@ public class World {
     public void update(Vector2D position) {
         for(int i = 0; i < Render.WORLD_SIZE; i ++) {
             for (int j = 0; j < Render.WORLD_SIZE; j++) {
-                hitBox[i][j] = new Rectangle(i * Render.tileSize * Render.scale + (int) position.x, j * Render.tileSize * Render.scale + (int) position.y, Render.tileSize * Render.scale, Render.tileSize * Render.scale);
+                this.hitBox[i][j] = new Rectangle(i * Render.tileSize * Render.scale + (int) position.x, j * Render.tileSize * Render.scale + (int) position.y, Render.tileSize * Render.scale, Render.tileSize * Render.scale);
             }
         }
         this.offset = position;
